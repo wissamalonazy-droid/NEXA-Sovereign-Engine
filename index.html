@@ -7,137 +7,128 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        .glass-panel { background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; overflow: hidden; }
-        #codeEditor { width: 100%; height: 200px; background: white; color: #374151; font-family: 'Courier New', monospace; font-size: 14px; padding: 15px; outline: none; resize: none; border: none; }
-        
-        /* شاشة القفل الفخمة */
-        #lockOverlay { position: fixed; inset: 0; background-color: #0f172a; display: flex; align-items: center; justify-content: center; z-index: 9999; transition: all 0.5s ease; }
-        .lock-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(20px); padding: 40px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); width: 90%; max-width: 400px; text-align: center; }
-        .blue-glow-circle { width: 80px; height: 80px; background: #2563eb; border-radius: 50%; margin: 0 auto 20px; box-shadow: 0 0 30px rgba(37, 99, 235, 0.5); }
-        
-        .hidden-workspace { display: none; opacity: 0; }
+        body { background-color: #f3f4f6; font-family: sans-serif; }
+        .glass-panel { background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; overflow: hidden; margin-bottom: 20px; }
+        #codeEditor { width: 100%; height: 220px; background: white; color: #374151; font-family: 'Courier New', monospace; font-size: 14px; padding: 20px; outline: none; resize: none; border: none; }
+        #lockOverlay { position: fixed; inset: 0; background-color: #0f172a; display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        .lock-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(25px); padding: 50px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); width: 90%; max-width: 420px; text-align: center; }
+        .blue-glow-circle { width: 90px; height: 90px; background: #2563eb; border-radius: 50%; margin: 0 auto 25px; box-shadow: 0 0 40px rgba(37, 99, 235, 0.6); }
+        #workspace { display: none; opacity: 0; transition: opacity 0.6s ease; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-5 md:p-10">
 
     <div id="lockOverlay">
         <div class="lock-card">
-            <div class="blue-glow-circle flex items-center justify-center">
-                <i class="fas fa-shield-halved text-white text-4xl"></i>
-            </div>
-            <h1 class="text-2xl font-black text-white italic uppercase tracking-tighter">NEXA <span class="text-blue-500 not-italic">CORE</span></h1>
-            <p class="text-[10px] text-slate-500 font-bold tracking-[0.3em] uppercase mt-2 mb-8">Sovereign Protection Active</p>
-            
-            <div class="relative mb-6">
-                <i class="fas fa-key absolute left-4 top-1/2 -translate-y-1/2 text-slate-600"></i>
-                <input type="password" id="keyInput" placeholder="ENTER SOVEREIGN KEY" 
-                       class="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-4 pl-12 text-sm font-bold text-white outline-none focus:border-blue-500 transition">
-            </div>
-
-            <button onclick="unlock()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-black tracking-widest active:scale-95 transition-all">
-                UNLEASH ENGINE
-            </button>
-            <p id="errorMsg" class="text-red-500 text-[10px] mt-4 font-bold hidden uppercase">Access Denied: Invalid Key</p>
+            <div class="blue-glow-circle flex items-center justify-center"><i class="fas fa-shield-halved text-white text-5xl"></i></div>
+            <h1 class="text-3xl font-black text-white italic tracking-tighter uppercase">NEXA <span class="text-blue-500 not-italic">CORE</span></h1>
+            <p class="text-[10px] text-slate-500 font-bold tracking-[0.4em] uppercase mt-3 mb-10">Sovereign Protection Active</p>
+            <input type="password" id="keyInput" placeholder="ENTER SOVEREIGN KEY" class="w-full bg-slate-900/60 border border-slate-700 rounded-2xl py-5 px-6 text-sm font-bold text-white outline-none mb-8 focus:border-blue-500">
+            <button onclick="unlock()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black tracking-widest active:scale-95 transition-all">UNLEASH ENGINE</button>
+            <p id="errorMsg" class="text-red-500 text-[11px] mt-5 font-bold hidden">INVALID KEY</p>
         </div>
     </div>
 
-    <div id="workspace" class="hidden-workspace max-w-md mx-auto space-y-4 pt-4">
-        
-        <div class="flex justify-between items-center px-1">
-            <div class="flex items-center space-x-2">
-                <i class="fas fa-shield-halved text-slate-400"></i>
-                <span class="text-xs font-bold text-slate-500 tracking-widest">Sovereign Live Editor</span>
-            </div>
-            <button onclick="run()" class="bg-black text-white text-[10px] font-black px-6 py-2 rounded uppercase tracking-widest">Run Analysis</button>
+    <div id="workspace" class="max-w-xl mx-auto">
+        <div class="flex justify-between items-center mb-6 px-1">
+            <span class="text-[11px] font-black text-slate-400 uppercase tracking-widest">Sovereign Live Editor</span>
+            <button onclick="runAnalysis()" class="bg-slate-900 text-white text-[10px] font-black px-8 py-3 rounded-xl uppercase tracking-widest hover:bg-black">RUN ANALYSIS</button>
         </div>
 
         <div class="glass-panel">
-            <div class="bg-gray-50 p-2 px-4 border-b border-gray-100 flex justify-between items-center">
-                <span class="text-[10px] font-bold text-slate-400">MAIN_SCRIPT.NXA</span>
-                <span class="bg-blue-50 text-blue-500 text-[8px] font-black px-2 py-0.5 rounded uppercase">Editable Mode</span>
+            <div class="bg-gray-50/50 p-3 px-5 border-b border-gray-100 flex justify-between text-[10px] font-bold text-slate-400">
+                <span>MAIN_SCRIPT.NXA</span>
+                <span class="text-blue-500">EDITABLE MODE</span>
             </div>
-            <textarea id="codeEditor" spellcheck="false">set hackerName -> "Anonymous_X"
-
-open vault: "Secret" -> {
-    set adminKey -> 9922
-    set password -> "NEXA_PRO_2026"
-}
-
-io.say(hackerName)
-reveal vault: "Secret"</textarea>
+            <textarea id="codeEditor" spellcheck="false">// Paste code here...</textarea>
         </div>
 
         <div class="glass-panel">
-            <div class="bg-slate-800 p-2 px-4 flex items-center space-x-2">
-                <i class="fas fa-terminal text-blue-400 text-[10px]"></i>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">System Output</span>
+            <div class="bg-slate-800 p-3 px-5 text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                <i class="fas fa-terminal text-blue-400"></i> SYSTEM OUTPUT
             </div>
-            <div id="logs" class="bg-slate-900 p-4 min-h-[100px] text-[11px] font-mono text-slate-300 space-y-1">
-                // System idle...
-            </div>
+            <div id="logs" class="bg-slate-900 p-6 min-h-[120px] text-[12px] font-mono text-slate-300 leading-relaxed"></div>
         </div>
 
         <div class="glass-panel">
-            <div class="bg-gray-50 p-2 px-4 flex items-center space-x-2">
-                <i class="fas fa-database text-blue-500 text-[10px]"></i>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Memory Monitor</span>
+            <div class="bg-gray-50/50 p-3 px-5 text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 border-b border-gray-100">
+                <i class="fas fa-database text-indigo-500"></i> MEMORY MONITOR
             </div>
-            <div id="mem" class="p-2 space-y-2">
-                </div>
+            <div id="mem" class="p-4 space-y-3 text-[12px]"></div>
         </div>
     </div>
 
     <script>
         const MASTER_KEY = "NX-9922-PRO-SHIELD#SOVEREIGN";
+        let currentVault = {};
 
         function unlock() {
-            const input = document.getElementById('keyInput').value;
-            if(input === MASTER_KEY) {
-                document.getElementById('lockOverlay').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('lockOverlay').style.display = 'none';
-                    document.getElementById('workspace').style.display = 'block';
-                    setTimeout(() => document.getElementById('workspace').style.opacity = '1', 50);
-                }, 500);
-            } else {
-                document.getElementById('errorMsg').classList.remove('hidden');
-            }
+            if(document.getElementById('keyInput').value === MASTER_KEY) {
+                document.getElementById('lockOverlay').style.display = 'none';
+                document.getElementById('workspace').style.display = 'block';
+                setTimeout(() => document.getElementById('workspace').style.opacity = '1', 50);
+            } else { document.getElementById('errorMsg').classList.remove('hidden'); }
         }
 
-        function run() {
+        function runAnalysis() {
             const code = document.getElementById('codeEditor').value;
             const logs = document.getElementById('logs');
             const mem = document.getElementById('mem');
             logs.innerHTML = '<span class="text-blue-400">[NXC]: Analyzing Sovereign Logic...</span>';
             mem.innerHTML = '';
+            currentVault = {};
+            let isVaultMode = false;
 
-            const lines = code.split('\n');
-            lines.forEach(l => {
-                let t = l.trim();
-                if(t.includes("hackerName")) {
-                    logs.innerHTML += '<br>NX_Output: "Anonymous_X"';
-                    addMem("hackerName", "Public", "Anonymous_X", false);
+            code.split('\n').forEach((line, i) => {
+                let l = line.trim();
+                if(!l || l.startsWith("//")) return;
+
+                // Handle Vault Opening
+                if(l.includes("open vault")) { isVaultMode = true; return; }
+                if(l === "}") { isVaultMode = false; return; }
+
+                // Handle 'set'
+                let setMatch = l.match(/set\s+(\w+)\s*->\s*(.*)/);
+                if(setMatch) {
+                    let [_, name, val] = setMatch;
+                    if(isVaultMode) {
+                        currentVault[name] = val.replace(/"/g, '');
+                        addMemRow(name, "vault:Secret", "🔒 hash_" + Math.random().toString(16).slice(2,8));
+                    } else {
+                        addMemRow(name, "Public", val);
+                    }
                 }
-                if(t.includes("adminKey")) {
-                    addMem("adminKey", "vault:Secret", "hash_7e8c...", true);
+
+                // Handle 'io.say' (The Security Guard)
+                let sayMatch = l.match(/io\.say\(([^)]+)\)/);
+                if(sayMatch) {
+                    let varName = sayMatch[1].trim();
+                    if(currentVault[varName]) {
+                        logs.innerHTML += `<br><span class="text-red-500 font-bold">[ERROR]: Logic violation at line ${i+1}. Respect the Vault!</span>`;
+                    } else {
+                        logs.innerHTML += `<br>NX_Output: ${varName}`;
+                    }
                 }
-                if(t.includes("reveal")) {
+
+                // Handle 'reveal'
+                if(l.startsWith("reveal vault")) {
                     setTimeout(() => {
                         logs.innerHTML += '<br><span class="text-green-500 font-bold">[SUCCESS]: Decrypting Vault...</span>';
-                        const cells = document.querySelectorAll('.vault-cell');
-                        cells[0].innerHTML = "9922"; cells[0].classList.add('text-green-600', 'font-bold');
-                    }, 800);
+                        for (let key in currentVault) {
+                            let el = document.getElementById('v_' + key);
+                            if(el) { el.innerHTML = currentVault[key]; el.className = "font-bold text-green-600"; }
+                        }
+                    }, 1000);
                 }
             });
         }
 
-        function addMem(name, tag, val, locked) {
+        function addMemRow(name, tag, val) {
             document.getElementById('mem').innerHTML += `
-                <div class="flex items-center justify-between p-2 border-b border-gray-50">
-                    <span class="text-xs font-bold text-slate-700">${name}</span>
-                    <span class="text-[8px] border border-blue-100 bg-blue-50 text-blue-500 px-2 py-0.5 rounded">${tag}</span>
-                    <span class="text-xs font-mono text-slate-400 vault-cell">${locked ? '🔒 '+val : val}</span>
+                <div class="flex justify-between border-b border-gray-50 pb-2">
+                    <span class="font-bold">${name}</span>
+                    <span class="text-[9px] bg-blue-50 text-blue-500 px-2 rounded border border-blue-100">${tag}</span>
+                    <span id="v_${name}" class="text-slate-400 font-mono">${val}</span>
                 </div>`;
         }
     </script>
