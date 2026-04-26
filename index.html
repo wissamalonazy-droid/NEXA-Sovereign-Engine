@@ -3,17 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXA | Personal Code Workshop</title>
+    <title>NEXA | PERSONAL CODE WORKSHOP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background-color: #f3f4f6; font-family: 'Courier New', Courier, monospace; }
-        .editor-bg { background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .editor-bg { background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #e5e7eb; }
         .console-bg { background-color: #f9fafb; border-top: 1px solid #e5e7eb; }
-        .line-num { color: #d1d5db; text-align: right; padding-right: 1rem; user-select: none; }
+        .line-num { color: #d1d5db; text-align: right; padding-right: 1rem; user-select: none; width: 30px;}
         .code-text { color: #374151; }
         .vault-tag { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; padding: 2px 6px; rounded: 4px; font-size: 0.75rem; }
         .lock-icon { color: #94a3b8; }
+        .reveal-data { color: #166534; font-weight: bold; animation: revealEffect 0.5s ease-out; }
+        
+        @keyframes revealEffect {
+            0% { background-color: #bbf7d0; color: #166534; }
+            100% { background-color: transparent; color: #166534; }
+        }
     </style>
 </head>
 <body class="p-4 md:p-8">
@@ -22,106 +28,163 @@
         <div class="flex items-center space-x-3">
             <div class="bg-gray-200 p-2 rounded-lg"><i class="fas fa-wand-magic-sparkles text-gray-600"></i></div>
             <div>
-                <h1 class="font-bold text-lg leading-tight">NEXA</h1>
+                <h1 class="font-bold text-lg leading-tight text-gray-900">NEXA</h1>
                 <p class="text-xs text-gray-500">Personal code workshop</p>
             </div>
         </div>
-        <button class="bg-[#1a1a1a] text-white px-6 py-2 rounded-md font-bold flex items-center hover:bg-black transition">
+        <button id="runBtn" onclick="runNexaSimulation()" class="bg-[#1a1a1a] text-white px-6 py-2 rounded-md font-bold flex items-center hover:bg-black transition">
             <i class="fas fa-play mr-2 text-xs"></i> Run Script
         </button>
     </div>
 
     <div class="max-w-4xl mx-auto space-y-6">
         
-        <div class="editor-bg overflow-hidden border border-gray-200">
+        <div class="editor-bg overflow-hidden">
             <div class="flex p-4 border-b border-gray-100 items-center text-gray-500 text-sm">
-                <i class="fas fa-angle-right mr-2"></i> SCRIPT.NXA
+                <i class="fas fa-angle-right mr-2 text-blue-500"></i> SCRIPT.NXA
             </div>
-            <div class="p-4 bg-white text-sm leading-relaxed">
-                <div class="flex">
-                    <div class="line-num">1</div>
-                    <div class="code-text"><span class="text-gray-400">// [STEP 1: DATABASE SETUP]</span></div>
-                </div>
-                <div class="flex">
-                    <div class="line-num">2</div>
-                    <div class="code-text">set storeName -> "SUHAIL ELUCE Luxury"</div>
-                </div>
-                <div class="flex">
-                    <div class="line-num">4</div>
-                    <div class="code-text">open vault: "Customer_Database" -> {</div>
-                </div>
-                <div class="flex">
-                    <div class="line-num">5</div>
-                    <div class="code-text ml-4">set topBuyer -> "Wissam Alenzi"</div>
-                </div>
-                <div class="flex">
-                    <div class="line-num">6</div>
-                    <div class="code-text ml-4">set secretToken -> "NX-9922-PRO-SHIELD"</div>
-                </div>
-                <div class="flex">
-                    <div class="line-num">7</div>
-                    <div class="code-text">}</div>
-                </div>
+            <div id="codeEditor" class="p-4 bg-white text-sm leading-relaxed overflow-auto h-[180px]">
+                <div class="flex"><div class="line-num">1</div><div class="code-text"><span class="text-gray-400">// DATABASE SETUP</span></div></div>
+                <div class="flex"><div class="line-num">2</div><div class="code-text">set store -> "SUHAIL ELUCE"</div></div>
+                <div class="flex"><div class="line-num">3</div><div class="code-text">open vault: "Orders" -> {</div></div>
+                <div class="flex"><div class="line-num">4</div><div class="code-text ml-4">set client -> "Wissam Alenzi"</div></div>
+                <div class="flex"><div class="line-num">5</div><div class="code-text ml-4">set phone -> 0500009922</div></div>
+                <div class="flex"><div class="line-num">6</div><div class="code-text">}</div></div>
+                <div class="flex"><div class="line-num">7</div><div class="code-text">io.say(store)</div></div>
+                <div class="flex"><div class="line-num">8</div><div class="code-text text-gray-400">// Hacker attempt</div></div>
+                <div class="flex"><div class="line-num">9</div><div class="code-text">io.say(client)</div></div>
+                <div class="flex"><div class="line-num">10</div><div class="code-text">reveal vault: "Orders"</div></div>
             </div>
         </div>
 
-        <div class="editor-bg border border-gray-200">
-            <div class="flex p-3 border-b border-gray-100 items-center text-gray-500 text-xs font-bold uppercase tracking-widest">
+        <div class="editor-bg">
+            <div class="flex p-3 border-b border-gray-100 items-center text-gray-500 text-xs font-bold uppercase tracking-widest console-bg">
                 <i class="fas fa-terminal mr-2"></i> Output Console
             </div>
-            <div class="p-4 space-y-2 text-sm font-mono">
-                <p class="text-gray-500">3 <span class="ml-4">[NXC]: storeName saved in public flow.</span></p>
-                <p class="text-gray-500">4 <span class="ml-4">[NXC]: Vault 'Customer_Database' opened.</span></p>
-                <p class="text-red-500">18 <span class="ml-2">[NEXA]: Logic violation. Respect the Vault!</span></p>
-                <p class="text-gray-700 font-bold">29 <span class="ml-2">--- [NXC]: Opening Vault Data ---</span></p>
-                <p class="text-gray-600">29 <span class="ml-2">[UNLOCKED]: topBuyer -> Wissam Alenzi</span></p>
+            <div id="consoleOutput" class="p-4 space-y-2 text-xs font-mono h-[150px] overflow-auto text-gray-400">
+                // System ready. Click 'Run Script' to execute...
             </div>
         </div>
 
         <div class="editor-bg border border-gray-200">
             <div class="flex p-3 border-b border-gray-100 items-center text-gray-500 text-xs font-bold uppercase tracking-widest">
-                <i class="fas fa-box-archive mr-2"></i> Memory State
+                <i class="fas fa-box-archive mr-2 text-indigo-500"></i> Memory State
             </div>
             <div class="p-4">
                 <table class="w-full text-sm">
-                    <tr class="border-b border-gray-50">
-                        <td class="py-4 font-bold">storeName</td>
-                        <td class="py-4"><span class="bg-gray-100 px-2 py-1 rounded text-[10px] text-gray-500">Bayan</span></td>
-                        <td class="py-4 text-right">"SUHAIL ELUCE"</td>
-                    </tr>
-                    <tr class="border-b border-gray-50">
-                        <td class="py-4 font-bold">topBuyer</td>
-                        <td class="py-4">
-                            <span class="bg-gray-100 px-2 py-1 rounded text-[10px] text-gray-500 mr-2">Bayan</span>
-                            <span class="vault-tag italic">vault:Customer_Database</span>
-                        </td>
-                        <td class="py-4 text-right lock-icon"><i class="fas fa-lock mr-2 text-xs"></i> 6e797aa63b16</td>
-                    </tr>
-                    <tr>
-                        <td class="py-4 font-bold">secretToken</td>
-                        <td class="py-4">
-                            <span class="bg-gray-100 px-2 py-1 rounded text-[10px] text-gray-500 mr-2">Bayan</span>
-                            <span class="vault-tag italic">vault:Customer_Database</span>
-                        </td>
-                        <td class="py-4 text-right lock-icon"><i class="fas fa-lock mr-2 text-xs"></i> 9f2c8d1a2b3c</td>
-                    </tr>
+                    <thead>
+                        <tr class="text-xs text-gray-400 uppercase border-b border-gray-100">
+                            <th class="text-left py-2 pb-3">Attribute</th>
+                            <th class="text-left py-2 pb-3">Type</th>
+                            <th class="text-right py-2 pb-3">Sovereign State</th>
+                        </tr>
+                    </thead>
+                    <tbody id="memoryBody" class="text-gray-700">
+                        <tr class="border-b border-gray-50">
+                            <td colspan="3" class="py-10 text-center text-gray-400 text-sm">Memory is empty. Run the script.</td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>
 
-        <div class="editor-bg border border-gray-200 p-4 flex justify-between items-center">
-            <div class="flex items-center text-sm text-gray-600">
+        <div class="editor-bg p-4 flex justify-between items-center text-gray-900">
+            <div class="flex items-center text-sm">
                 <i class="fas fa-shield-halved mr-2 text-blue-500"></i>
-                <span>Sovereign Core: <span class="font-bold text-green-600 uppercase">Authorized</span></span>
+                <span class="font-bold">NXC Engine v1.0</span>
             </div>
-            <div class="text-xs text-gray-400 font-mono">ORIGINAL_NEXA_KEY_9922</div>
+            <div class="flex items-center space-x-3 text-xs">
+                <span class="flex items-center text-green-600"><i class="fas fa-circle text-[6px] mr-2"></i> Authorized</span>
+                <span class="text-gray-400 font-mono bg-gray-100 px-3 py-1 rounded-md">KEY: 9922</span>
+            </div>
         </div>
 
     </div>
 
-    <div class="text-center mt-8 text-gray-400 text-[10px] uppercase tracking-widest">
-        Powered by NEXA Engine | Suhail Eluce
+    <div class="text-center mt-12 text-gray-400 text-[10px] uppercase tracking-widest">
+        Powered by NEXA Engine | Suhail Eluce Systems
     </div>
+
+    <script>
+        function runNexaSimulation() {
+            const btn = document.getElementById('runBtn');
+            const console = document.getElementById('consoleOutput');
+            const memoryBody = document.getElementById('memoryBody');
+
+            // 1. Reset UI and Start Loading Effect
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Executing...';
+            console.innerHTML = '// Starting NEXA Simulation...';
+            memoryBody.innerHTML = ''; // Start empty
+
+            // 2. Step-by-step Simulation (using delays)
+            setTimeout(() => {
+                console.innerHTML += '<br><span class="text-gray-500">[NXC]: store set to "SUHAIL ELUCE".</span>';
+                addMemoryRow('store', 'Bayan', '"SUHAIL ELUCE"', 'Nexa.Public');
+            }, 500);
+
+            setTimeout(() => {
+                console.innerHTML += '<br><span class="text-gray-500">[NXC]: Vault "Orders" established.</span>';
+                addMemoryRow('client', 'Bayan', '6e797aa63b16', 'vault:Orders', true);
+                addMemoryRow('phone', 'Qadr', '02f2af00569c', 'vault:Orders', true);
+            }, 1000);
+
+            setTimeout(() => {
+                console.innerHTML += '<br><span class="text-gray-700">NX_Output: "SUHAIL ELUCE"</span>';
+            }, 1500);
+
+            setTimeout(() => {
+                console.innerHTML += '<br><span class="text-red-500 font-bold">[NEXA]: Logic violation. Respect the Vault!</span>';
+            }, 2000);
+
+            setTimeout(() => {
+                console.innerHTML += '<br><span class="text-gray-900 font-bold">--- [NXC]: Opening Vault Data ---</span>';
+                revealVaultData();
+            }, 3000);
+
+            setTimeout(() => {
+                console.innerHTML += '<br>// Script execution finished.';
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-play mr-2 text-xs"></i> Run Script';
+            }, 3500);
+        }
+
+        function addMemoryRow(name, type, value, context, isLocked = false) {
+            const body = document.getElementById('memoryBody');
+            const row = document.createElement('tr');
+            row.className = 'border-b border-gray-50 hover:bg-gray-50';
+            
+            row.innerHTML = `
+                <td class="py-4 font-bold text-gray-900">${name}</td>
+                <td class="py-4">
+                    <span class="bg-gray-100 px-2 py-1 rounded text-[10px] text-gray-500 mr-2">${type}</span>
+                    <span class="vault-tag italic">${context}</span>
+                </td>
+                <td class="py-4 text-right lock-icon ${isLocked ? 'font-mono' : ''}" id="mem_${name}">${isLocked ? '<i class="fas fa-lock mr-2 text-xs"></i> ' + value : value}</td>
+            `;
+            body.appendChild(row);
+        }
+
+        function revealVaultData() {
+            const console = document.getElementById('consoleOutput');
+            
+            // 1. Console Reveals
+            console.innerHTML += '<br><span class="reveal-data">[UNLOCKED]: client -> Wissam Alenzi</span>';
+            console.innerHTML += '<br><span class="reveal-data">[UNLOCKED]: phone -> 0500009922</span>';
+            
+            // 2. Table Reveals
+            const memClient = document.getElementById('mem_client');
+            const memPhone = document.getElementById('mem_phone');
+            
+            if (memClient && memPhone) {
+                memClient.innerHTML = 'Wissam Alenzi';
+                memClient.className = 'py-4 text-right reveal-data';
+                
+                memPhone.innerHTML = '0500009922';
+                memPhone.className = 'py-4 text-right reveal-data';
+            }
+        }
+    </script>
 
 </body>
 </html>
