@@ -1,100 +1,64 @@
 import os
+import sys
 import hashlib
 import re
-import sys
 
 class NEXA_Sovereign_Engine:
-    """
-    NEXA Sovereign Engine - Hardened Build v1.1
-    Security Status: STRICT MODE
-    """
     def __init__(self):
         self.key_file = "key.nx"
+        # --- [السطر الانتحاري] ---
+        self._ensure_key_exists() 
+        
         self.storage = {}
         self.vault = {}
         self.original_data = {}
         self.vault_mode = False
-        # التحقق من القفل عند التشغيل مباشرة
-        self._boot_sequence()
 
-    def _boot_sequence(self):
-        print("--- [NXC]: INITIALIZING SOVEREIGN CORE ---")
-        
-        # 1. التحقق من وجود الملف (لن يصنع ملفاً جديداً بعد الآن)
+    def _ensure_key_exists(self):
+        # التحقق الصارم: إذا الملف مو موجود في المجلد، اخرج فوراً
         if not os.path.exists(self.key_file):
-            print("\n[NXC]: FATAL ERROR. Sovereign Key ('key.nx') is missing.")
-            print("[NXC]: Access Denied. System Locked.")
-            sys.exit() # إغلاق البرنامج فوراً
+            print("\n" + "!"*40)
+            print("[NXC]: FATAL ERROR - SOVEREIGN KEY MISSING")
+            print("[NXC]: SYSTEM LOCKED FOR SECURITY")
+            print("!"*40 + "\n")
+            sys.exit() # ينهي تشغيل البرنامج كلياً
 
-        # 2. التحقق من صحة المفتاح داخل الملف
+        # إذا الملف موجود، تأكد من الكلام اللي داخله
         with open(self.key_file, "r") as f:
-            user_key = f.read().strip()
-            if user_key != "NEXA_9922_ORIGINAL":
-                print("\n[NXC]: SECURITY BREACH. Invalid Secret Key detected.")
-                print("[NXC]: System Lockdown Initiated.")
+            if f.read().strip() != "NEXA_9922_ORIGINAL":
+                print("\n[NXC]: SECURITY BREACH - INVALID KEY")
                 sys.exit()
         
-        print("[NXC]: Key Authenticated. System Ready.\n")
+        print("[NXC]: ACCESS GRANTED. WELCOME WISSAM.\n")
 
     def execute(self, script):
+        # (باقي كود التنفيذ اللي أعطيتك اياه سابقاً)
         for line in script.split('\n'):
             line = line.strip()
             if not line or line.startswith("//"): continue
-
-            # أمر الكشف (Reveal)
-            if line.startswith("reveal vault:"):
-                v_match = re.search(r'vault:\s*"(.*)"', line)
-                if v_match:
-                    v_name = v_match.group(1)
-                    print(f"\n--- [NXC]: REVEALING VAULT '{v_name}' ---")
-                    for k, v in self.original_data.items():
-                        print(f"[UNLOCKED]: {k} -> {v}")
-                continue
-
-            # أوامر الخزانة
-            if "open vault:" in line:
-                self.vault_mode = True
-                continue
-            if line == "}":
-                self.vault_mode = False
-                continue
-
-            # أوامر التعيين (Set)
+            if "open vault:" in line: self.vault_mode = True; continue
+            if line == "}": self.vault_mode = False; continue
             if "set" in line and "->" in line:
                 parts = re.match(r'set\s+(\w+)\s*->\s*(.*)', line)
                 if parts:
                     name, val = parts.groups()
                     val = val.strip().strip('"')
-                    
                     if self.vault_mode:
-                        # تشفير البيانات داخل الخزانة
                         self.vault[name] = hashlib.sha256(val.encode()).hexdigest()[:12]
                         self.original_data[name] = val
-                    else:
-                        self.storage[name] = val
-
-            # أوامر الطباعة (Say)
+                    else: self.storage[name] = val
             elif "io.say" in line:
                 target_match = re.search(r'\((.*)\)', line)
                 if target_match:
                     target = target_match.group(1)
-                    if target in self.vault:
-                        print(f"[NEXA]: Logic violation at '{target}'. Respect the Vault!")
-                    else:
-                        print(f"NX_Output: {self.storage.get(target, target)}")
+                    if target in self.vault: print(f"[NEXA]: Logic violation at '{target}'.")
+                    else: print(f"NX_Output: {self.storage.get(target, target)}")
+            if line.startswith("reveal vault:"):
+                print(f"\n--- [REVEALING] ---")
+                for k, v in self.original_data.items(): print(f"[UNLOCKED]: {k} -> {v}")
 
-# --- [تجربة النظام] ---
+# --- تجربة القفل ---
 if __name__ == "__main__":
     nexa = NEXA_Sovereign_Engine()
-    
-    # هذا الكود لن يعمل إلا إذا كان ملف key.nx موجوداً وصحيحاً
-    clean_code = """
-    set system -> "NEXA CORE"
-    open vault: "Security" -> {
-        set masterKey -> 9922
-    }
-    io.say(system)
-    io.say(masterKey)
-    reveal vault: "Security"
-    """
-    nexa.execute(clean_code)
+    test_code = 'set x -> "Test"\nio.say(x)'
+    nexa.execute(test_code)
