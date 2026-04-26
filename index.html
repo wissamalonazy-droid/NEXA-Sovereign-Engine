@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXA | LIVE CODE WORKSHOP</title>
+    <title>NEXA | SOVEREIGN CORE ENGINE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background-color: #f3f4f6; font-family: 'Courier New', Courier, monospace; }
-        .editor-container { background-color: #ffffff; border-radius: 8px; border: 1px solid #e5e7eb; overflow: hidden; }
+        .editor-container { background-color: #ffffff; border-radius: 8px; border: 1px solid #e5e7eb; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
         #codeEditor {
             width: 100%;
-            height: 200px;
+            height: 220px;
             padding: 15px;
             font-family: 'Courier New', monospace;
             font-size: 14px;
@@ -20,69 +20,88 @@
             border: none;
             outline: none;
             resize: none;
-            background-attachment: local;
             background-image: linear-gradient(#ffffff 50%, #f9fafb 50%);
             background-size: 100% 3rem;
-            line-height: 1.5rem;
         }
-        .console-bg { background-color: #1a1a1a; color: #d1d5db; }
-        .vault-tag { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; }
-        .reveal-data { color: #166534; font-weight: bold; background-color: #f0fdf4; }
+        .console-bg { background-color: #1a1a1a; color: #d1d5db; border-radius: 0 0 8px 8px; }
+        .vault-tag { background-color: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; padding: 2px 6px; border-radius: 4px; font-size: 10px; }
+        .reveal-data { color: #15803d; font-weight: bold; background-color: #f0fdf4; }
+        .error-text { color: #dc2626; font-weight: bold; }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <div class="max-w-4xl mx-auto flex justify-between items-center mb-6">
-        <div class="flex items-center space-x-3">
-            <div class="bg-gray-200 p-2 rounded-lg"><i class="fas fa-code text-gray-600"></i></div>
+    <div class="max-w-4xl mx-auto flex justify-between items-center mb-8">
+        <div class="flex items-center space-x-4">
+            <div class="bg-slate-900 p-3 rounded-xl shadow-lg shadow-blue-900/20">
+                <i class="fas fa-shield-halved text-blue-400 text-xl"></i>
+            </div>
             <div>
-                <h1 class="font-bold text-lg leading-tight">NEXA <span class="text-blue-600">ELUCE</span></h1>
-                <p class="text-xs text-gray-500">Sovereign Live Editor</p>
+                <h1 class="font-black text-2xl tracking-tighter text-slate-900 uppercase">NEXA <span class="text-blue-600 font-light italic">Sovereign</span></h1>
+                <p class="text-[10px] text-slate-400 font-bold tracking-[0.2em] uppercase">Advanced Data Shield Engine</p>
             </div>
         </div>
-        <button id="runBtn" onclick="executeNexa()" class="bg-[#1a1a1a] text-white px-6 py-2 rounded-md font-bold flex items-center hover:bg-black transition">
-            <i class="fas fa-play mr-2 text-[10px]"></i> RUN SCRIPT
+        <button id="runBtn" onclick="executeNexa()" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-black text-sm tracking-widest hover:bg-blue-700 shadow-lg shadow-blue-600/30 transition-all active:scale-95">
+            <i class="fas fa-play mr-2"></i> EXECUTE CORE
         </button>
     </div>
 
     <div class="max-w-4xl mx-auto space-y-6">
         
         <div class="editor-container">
-            <div class="flex p-3 bg-gray-50 border-b border-gray-100 items-center justify-between text-gray-500 text-xs">
-                <span><i class="fas fa-file-code mr-2 text-blue-500"></i> MAIN_SCRIPT.NXA</span>
-                <span class="text-[10px] bg-white px-2 py-1 rounded border">EDITABLE MODE</span>
+            <div class="flex p-3 bg-slate-50 border-b border-slate-100 items-center justify-between text-[10px] font-bold text-slate-400">
+                <span><i class="fas fa-file-code mr-2 text-blue-500"></i> WORKSPACE / SCRIPTS / MAIN.NXA</span>
+                <span class="flex items-center"><i class="fas fa-circle text-green-500 text-[6px] mr-2"></i> LIVE EDITOR</span>
             </div>
-            <textarea id="codeEditor" spellcheck="false">// Try editing this code!
-set store -> "SUHAIL ELUCE Luxury"
-open vault: "Secret_Vault" -> {
-    set adminKey -> 9922
-    set password -> "NEXA_PRO_2026"
+            <textarea id="codeEditor" spellcheck="false">// NEXA Sovereign Language Template
+set systemName -> "NEXA CORE v1.0"
+set authLevel -> "Administrator"
+
+open vault: "Security_Cell" -> {
+    set masterKey -> 9922
+    set userToken -> "NX-7788-ALPHA"
 }
-io.say(store)
-io.say(password)
-reveal vault: "Secret_Vault"</textarea>
+
+io.say(systemName)
+io.say(userToken) // This should trigger logic violation
+reveal vault: "Security_Cell"</textarea>
         </div>
 
-        <div class="editor-container overflow-hidden">
-            <div class="flex p-3 bg-[#262626] items-center text-gray-400 text-[10px] font-bold uppercase tracking-widest">
-                <i class="fas fa-terminal mr-2"></i> System Output
+        <div class="editor-container">
+            <div class="flex p-3 bg-[#111827] items-center text-slate-500 text-[9px] font-black uppercase tracking-widest border-b border-slate-800">
+                <i class="fas fa-terminal mr-2 text-blue-400"></i> System Logs & Output
             </div>
-            <div id="consoleOutput" class="console-bg p-4 space-y-1 text-xs font-mono h-[120px] overflow-auto">
-                // System initialized. Edit code above and click RUN.
+            <div id="consoleOutput" class="console-bg p-5 space-y-2 text-xs font-mono h-[140px] overflow-auto">
+                <span class="text-slate-600">// Engine initialized. Waiting for execution...</span>
             </div>
         </div>
 
         <div class="editor-container">
-            <div class="flex p-3 bg-gray-50 border-b border-gray-100 items-center text-gray-500 text-xs font-bold uppercase">
-                <i class="fas fa-database mr-2 text-indigo-500"></i> Memory Monitor
+            <div class="flex p-3 bg-slate-50 border-b border-slate-100 items-center text-slate-500 text-[9px] font-black uppercase tracking-widest">
+                <i class="fas fa-microchip mr-2 text-indigo-500"></i> Memory Allocation Table
             </div>
-            <div class="p-4">
-                <table class="w-full text-sm">
-                    <tbody id="memoryBody">
-                        <tr class="text-gray-400 text-center"><td class="py-4">No data in memory.</td></tr>
+            <div class="p-0">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-slate-50/50 text-[10px] text-slate-400 uppercase border-b border-slate-100">
+                        <tr>
+                            <th class="px-6 py-3">Variable</th>
+                            <th class="px-6 py-3">Data Type</th>
+                            <th class="px-6 py-3 text-right">Encrypted State</th>
+                        </tr>
+                    </thead>
+                    <tbody id="memoryBody" class="divide-y divide-slate-50">
+                        <tr><td colspan="3" class="py-10 text-center text-slate-300 italic">No variables in memory.</td></tr>
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        <div class="flex justify-between items-center p-2 text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+            <div class="flex space-x-6">
+                <span>Encryption: <span class="text-slate-900">SHA-256</span></span>
+                <span>Security: <span class="text-blue-600 font-black">Level 5</span></span>
+            </div>
+            <div>Build: 2026.04.26</div>
         </div>
 
     </div>
@@ -94,59 +113,67 @@ reveal vault: "Secret_Vault"</textarea>
             const memoryBody = document.getElementById('memoryBody');
             const runBtn = document.getElementById('runBtn');
 
-            // Loading Effect
-            runBtn.innerHTML = '<i class="fas fa-sync fa-spin mr-2"></i> COMPILING...';
-            consoleBox.innerHTML = '<span class="text-blue-400">[NXC]: Analyzing Sovereign Logic...</span>';
+            runBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> ANALYZING...';
+            consoleBox.innerHTML = '<span class="text-blue-400 font-bold">[INIT]: NEXA Sovereign Engine starting...</span>';
             memoryBody.innerHTML = '';
 
             setTimeout(() => {
-                // محاكاة معالجة الكود المكتوب
-                consoleBox.innerHTML += '<br><span class="text-gray-500">[SYSTEM]: Script parsed successfully.</span>';
-                
-                // إضافة المتغيرات العامة
-                if(code.includes('store')) {
-                    addRow('store', 'Bayan', '"SUHAIL ELUCE"', 'Public');
-                    consoleBox.innerHTML += '<br>NX_Output: "SUHAIL ELUCE"';
-                }
+                const lines = code.split('\n');
+                let hasError = false;
 
-                // محاكاة الحماية (Vault)
-                if(code.includes('vault')) {
-                    addRow('adminKey', 'Qadr', '7e8c...2a', 'vault:Secret', true);
-                    addRow('password', 'Bayan', '9f1a...4d', 'vault:Secret', true);
-                    
-                    if(code.includes('io.say(password)')) {
-                        consoleBox.innerHTML += '<br><span class="text-red-500">[NEXA]: Logic violation. Access Denied!</span>';
+                lines.forEach((line, index) => {
+                    let trim = line.trim();
+                    if (!trim || trim.startsWith("//")) return;
+
+                    // Logic Violation Check (The Red Warning)
+                    if (trim.includes("io.say") && (trim.includes("userToken") || trim.includes("masterKey"))) {
+                        consoleBox.innerHTML += `<br><span class="error-text">[CRITICAL]: Logic violation at line ${index+1}. Respect the Vault!</span>`;
+                        hasError = true;
                     }
-                }
 
-                // محاكاة الـ Reveal
-                if(code.includes('reveal')) {
-                    setTimeout(() => {
-                        consoleBox.innerHTML += '<br><span class="text-green-500 font-bold">--- [NXC]: REVEALING SOVEREIGN DATA ---</span>';
-                        consoleBox.innerHTML += '<br><span class="text-green-400">[UNLOCKED]: adminKey -> 9922</span>';
-                        revealTable();
-                    }, 1000);
-                }
+                    // Process Public Data
+                    if (trim.includes("systemName")) {
+                        addVar('systemName', 'Bayan', '"NEXA CORE"', 'Public');
+                        consoleBox.innerHTML += '<br><span class="text-slate-300">NX_Output: "NEXA CORE v1.0"</span>';
+                    }
 
-                runBtn.innerHTML = '<i class="fas fa-play mr-2 text-[10px]"></i> RUN SCRIPT';
-            }, 800);
+                    // Process Vault
+                    if (trim.includes("open vault")) {
+                        consoleBox.innerHTML += '<br><span class="text-blue-300">[VAULT]: Shielding sensitive memory cell...</span>';
+                        addVar('masterKey', 'Qadr', '7e8c...2a', 'vault:Security', true);
+                        addVar('userToken', 'Bayan', '9f1a...4d', 'vault:Security', true);
+                    }
+
+                    // Reveal Command
+                    if (trim.includes("reveal vault") && !hasError) {
+                        setTimeout(() => {
+                            consoleBox.innerHTML += '<br><span class="text-green-500 font-bold">--- [NXC]: SOVEREIGN ACCESS GRANTED ---</span>';
+                            consoleBox.innerHTML += '<br><span class="text-green-400 text-[10px] italic">// Decrypting Vault: Security_Cell...</span>';
+                            revealAll();
+                        }, 800);
+                    }
+                });
+
+                if(!hasError) consoleBox.innerHTML += '<br><span class="text-green-600 font-bold">// EXECUTION FINISHED SUCCESSFULLY.</span>';
+                runBtn.innerHTML = '<i class="fas fa-play mr-2"></i> EXECUTE CORE';
+            }, 1000);
         }
 
-        function addRow(name, type, val, context, locked = false) {
+        function addVar(name, type, val, context, locked) {
             const body = document.getElementById('memoryBody');
             body.innerHTML += `
-                <tr class="border-b border-gray-50">
-                    <td class="py-3 font-bold">${name}</td>
-                    <td class="py-3"><span class="bg-gray-100 text-gray-500 px-2 py-1 rounded text-[10px]">${type}</span> <span class="vault-tag ml-2">${context}</span></td>
-                    <td class="py-3 text-right font-mono text-gray-400" id="val_${name}">${locked ? '<i class="fas fa-lock text-[10px] mr-1"></i>'+val : val}</td>
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-bold text-slate-800">${name}</td>
+                    <td class="px-6 py-4"><span class="bg-slate-100 text-slate-500 px-2 py-1 rounded text-[9px] font-black mr-2">${type}</span> <span class="vault-tag">${context}</span></td>
+                    <td class="px-6 py-4 text-right font-mono text-slate-400" id="v_${name}">${locked ? '<i class="fas fa-lock mr-2 text-[9px]"></i>'+val : val}</td>
                 </tr>`;
         }
 
-        function revealTable() {
-            document.getElementById('val_adminKey').innerHTML = "9922";
-            document.getElementById('val_adminKey').className = "py-3 text-right reveal-data";
-            document.getElementById('val_password').innerHTML = "NEXA_PRO_2026";
-            document.getElementById('val_password').className = "py-3 text-right reveal-data";
+        function revealAll() {
+            const v1 = document.getElementById('v_masterKey');
+            const v2 = document.getElementById('v_userToken');
+            if(v1) { v1.innerHTML = "9922"; v1.className = "px-6 py-4 text-right reveal-data"; }
+            if(v2) { v2.innerHTML = "NX-7788-ALPHA"; v2.className = "px-6 py-4 text-right reveal-data"; }
         }
     </script>
 </body>
