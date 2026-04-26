@@ -6,28 +6,37 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #0f172a; font-family: 'Courier New', Courier, monospace; min-width: 1200px; color: #f1f5f9; overflow: hidden; }
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500&display=swap');
         
-        /* تأثيرات شاشة القفل (Glassmorphism) */
+        body { background-color: #0f172a; font-family: 'Courier New', Courier, monospace; min-width: 1200px; color: #f1f5f9; overflow: hidden; height: 100vh; margin: 0; }
+        
+        /* شاشة القفل */
+        #lockScreen { transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
         .lock-panel { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
         .blue-glow { box-shadow: 0 0 40px rgba(56, 189, 248, 0.3); }
         
-        /* تأثير الانتقال السلس */
-        #mainWorkspace { display: none; opacity: 0; transition: opacity 0.8s ease; }
-        
-        /* ستايل ورشة العمل البرمجية (مثل التصميم القديم) */
+        /* واجهة العمل */
+        #mainWorkspace { display: none; opacity: 0; transition: opacity 0.8s ease; width: 100%; padding: 40px; }
         .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; }
-        #codeEditor { width: 100%; height: 380px; background: transparent; color: #94a3b8; font-family: 'Fira Code', 'Courier New', monospace; font-size: 14px; line-height: 1.6; border: none; outline: none; resize: none; padding: 20px; }
+        
+        #codeEditor { 
+            width: 100%; height: 380px; background: transparent; color: #94a3b8; 
+            font-family: 'Fira Code', monospace; font-size: 14px; line-height: 1.6; 
+            border: none; outline: none; resize: none; padding: 20px; 
+        }
+        
         .console-text { font-family: 'Fira Code', monospace; font-size: 12px; }
-        .vault-tag { background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.2); padding: 2px 8px; border-radius: 4px; font-size: 11px; }
-        .reveal-data { color: #4ade80 !important; font-weight: bold; animation: revealPulse 1s ease-out; }
-        @keyframes revealPulse { 0% { background: rgba(74, 222, 128, 0.1); } 100% { background: transparent; } }
+        .vault-tag { background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.2); padding: 2px 8px; border-radius: 4px; font-size: 10px; }
+        .reveal-data { color: #4ade80 !important; font-weight: bold; background: rgba(74, 222, 128, 0.05); }
+
+        /* أنيميشن الاهتزاز عند الخطأ */
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        .animate-shake { animation: shake 0.3s ease-in-out; }
     </style>
 </head>
-<body class="p-10 flex items-center justify-center min-h-screen">
+<body class="flex items-center justify-center">
 
     <div id="lockScreen" class="lock-panel p-16 w-[500px] text-center flex flex-col items-center space-y-10 z-50">
-        
         <div class="w-24 h-24 bg-blue-600 rounded-full flex items-center justify-center blue-glow">
             <i class="fas fa-shield-halved text-white text-5xl"></i>
         </div>
@@ -39,45 +48,41 @@
 
         <div class="w-full relative">
             <i class="fas fa-key absolute left-5 top-1/2 -translate-y-1/2 text-slate-600"></i>
-            <input type="password" id="sovereignKey" placeholder="ENTER SOVEREIGN KEY" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-4 pl-14 pr-6 text-sm font-bold text-white placeholder:text-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition">
+            <input type="password" id="sovereignKey" placeholder="ENTER SOVEREIGN KEY" 
+                   class="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-4 pl-14 pr-6 text-sm font-bold text-white placeholder:text-slate-600 focus:border-blue-500 outline-none transition">
         </div>
 
         <button onclick="unleashEngine()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-black tracking-widest transition-all active:scale-95 shadow-lg shadow-blue-600/30">
             UNLEASH ENGINE
         </button>
 
-        <p id="lockError" class="text-red-500 text-xs font-bold hidden">Invalid Sovereign Key. Access Denied.</p>
+        <p id="lockError" class="text-red-500 text-xs font-bold hidden">ACCESS DENIED: INVALID SOVEREIGN KEY</p>
     </div>
 
-
-    <div id="mainWorkspace" class="w-full">
-        <div class="max-w-[1200px] mx-auto flex justify-between items-center mb-8">
-            <div class="flex items-center space-x-4">
-                <div class="p-3 bg-blue-600 rounded-xl">
-                    <i class="fas fa-shield-halved text-white text-2xl"></i>
+    <div id="mainWorkspace">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="flex justify-between items-center mb-8">
+                <div class="flex items-center space-x-4">
+                    <div class="p-3 bg-blue-600 rounded-xl"><i class="fas fa-shield-halved text-white text-2xl"></i></div>
+                    <div>
+                        <h1 class="text-2xl font-black tracking-tighter uppercase italic text-white">NEXA <span class="text-blue-500 not-italic">Sovereign</span></h1>
+                        <p class="text-[10px] text-slate-500 font-bold tracking-[0.3em] uppercase">Security Workshop v1.1</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="text-2xl font-black tracking-tighter uppercase italic text-white">NEXA Sovereign</h1>
-                    <p class="text-[10px] text-slate-500 font-bold tracking-[0.3em] uppercase">Core Security Workshop v1.1</p>
-                </div>
+                <button id="runBtn" onclick="executeNexa()" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-3 rounded-lg font-black tracking-widest transition-all shadow-lg shadow-blue-600/20">
+                    <i class="fas fa-play mr-2"></i> EXECUTE CORE
+                </button>
             </div>
-            <button id="runBtn" onclick="executeNexa()" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-3 rounded-lg font-black tracking-widest transition-all shadow-lg shadow-blue-600/20">
-                <i class="fas fa-play mr-2"></i> EXECUTE CORE
-            </button>
-        </div>
 
-        <div class="max-w-[1200px] mx-auto grid grid-cols-12 gap-6">
-            <div class="col-span-8 glass-panel overflow-hidden">
-                <div class="bg-slate-800/50 p-3 border-b border-white/5 flex justify-between items-center text-[11px] font-bold text-slate-400">
-                    <span><i class="fas fa-file-code mr-2 text-blue-400"></i> MAIN_SCRIPT.NXA</span>
-                    <span class="text-green-500"><i class="fas fa-circle text-[6px] mr-2"></i> READY</span>
-                </div>
+            <div class="grid grid-cols-12 gap-6">
+                <div class="col-span-8 glass-panel overflow-hidden">
+                    <div class="bg-slate-800/50 p-3 border-b border-white/5 flex justify-between items-center text-[11px] font-bold text-slate-400">
+                        <span><i class="fas fa-file-code mr-2 text-blue-400"></i> MAIN_SCRIPT.NXA</span>
+                        <span class="text-green-500"><i class="fas fa-circle text-[6px] mr-2"></i> SYSTEM READY</span>
+                    </div>
 <textarea id="codeEditor" spellcheck="false">// --- [NEXA SOVEREIGN CLEAN SCRIPT] ---
-// 1. Initialize Public Infrastructure
 set system -> "NEXA CORE v1.1"
-set status -> "Operational"
 
-// 2. Encapsulate Sensitive Assets in Vault
 open vault: "Corporate_Secrets" -> {
     set adminKey -> 9922
     set userToken -> "NX-7788-ALPHA"
@@ -85,59 +90,62 @@ open vault: "Corporate_Secrets" -> {
 
 io.say(system)
 reveal vault: "Corporate_Secrets"</textarea>
-            </div>
+                </div>
 
-            <div class="col-span-4 space-y-6">
-                <div class="glass-panel h-[210px] flex flex-col">
-                    <div class="bg-slate-800/50 p-3 border-b border-white/5 text-[9px] font-bold text-slate-500 tracking-widest">SYSTEM LOGS</div>
-                    <div id="consoleBox" class="p-4 overflow-auto flex-grow console-text text-slate-400 space-y-1">
-                        // Waiting...
+                <div class="col-span-4 space-y-6">
+                    <div class="glass-panel h-[210px] flex flex-col">
+                        <div class="bg-slate-800/50 p-3 border-b border-white/5 text-[9px] font-bold text-slate-500 tracking-widest uppercase">System Logs</div>
+                        <div id="consoleBox" class="p-4 overflow-auto flex-grow console-text text-slate-400 space-y-1"></div>
+                    </div>
+                    <div class="glass-panel h-[210px] flex flex-col">
+                        <div class="bg-slate-800/50 p-3 border-b border-white/5 text-[9px] font-bold text-slate-500 tracking-widest uppercase">Memory Map</div>
+                        <div class="p-0 overflow-auto flex-grow">
+                            <table class="w-full text-left text-[11px]">
+                                <tbody id="memoryBody" class="divide-y divide-white/5"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-                <div class="glass-panel h-[210px] flex flex-col">
-                    <div class="bg-slate-800/50 p-3 border-b border-white/5 text-[9px] font-bold text-slate-500 tracking-widest">MEMORY MAP</div>
-                    <div class="p-0 overflow-auto flex-grow">
-                        <table class="w-full text-left text-[11px]">
-                            <tbody id="memoryBody" class="divide-y divide-white/5"></tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
-        </div>
-
-        <div class="max-w-[1200px] mx-auto mt-10 text-center text-[10px] font-bold text-slate-600 tracking-[0.2em] uppercase pt-6 border-t border-white/5">
-            NEXA SOVEREIGN TECH &copy; 2026
+            
+            <div class="mt-10 text-center text-[10px] font-bold text-slate-600 tracking-[0.2em] uppercase pt-6 border-t border-white/5">
+                NEXA SOVEREIGN TECH &copy; 2026 | SECURED BY WISSAM ALENZI
+            </div>
         </div>
     </div>
 
     <script>
-        // دالة فتح القفل
+        // دالة فتح القفل بمفتاح صعب التخمين
         function unleashEngine() {
             const keyInput = document.getElementById('sovereignKey').value;
             const lockScreen = document.getElementById('lockScreen');
             const mainWorkspace = document.getElementById('mainWorkspace');
             const lockError = document.getElementById('lockError');
 
-            // المفتاح السري (تقدر تغيره لأي شيء)
-            const SECRET_KEY = "NEXA_9922";
+            // [المفتاح السيادي المعقد]
+            const SECRET_KEY = "NX-9922-PRO-SHIELD#SOVEREIGN";
 
             if (keyInput === SECRET_KEY) {
-                // نجاح الدخول: اخفاء القفل واظهار الورشة
-                lockScreen.style.display = 'none';
-                document.body.style.overflow = 'auto'; // السماح بالسكول
-                document.body.classList.remove('flex', 'items-center', 'justify-center', 'min-h-screen');
+                lockScreen.style.opacity = "0";
+                lockScreen.style.transform = "scale(0.9)";
                 
-                mainWorkspace.style.display = 'block';
-                setTimeout(() => mainWorkspace.style.opacity = '1', 50);
+                setTimeout(() => {
+                    lockScreen.style.display = 'none';
+                    document.body.classList.remove('flex', 'items-center', 'justify-center');
+                    document.body.style.overflow = 'auto';
+                    mainWorkspace.style.display = 'block';
+                    setTimeout(() => mainWorkspace.style.opacity = '1', 50);
+                }, 600);
             } else {
-                // فشل الدخول: هز الخانة وطلع خطأ
                 lockError.classList.remove('hidden');
-                lockScreen.classList.add('animate-pulse');
-                setTimeout(() => lockScreen.classList.remove('animate-pulse'), 500);
+                document.getElementById('sovereignKey').classList.add('animate-shake', 'border-red-500');
+                setTimeout(() => {
+                    document.getElementById('sovereignKey').classList.remove('animate-shake', 'border-red-500');
+                }, 400);
             }
         }
 
-        // دالة تشغيل الكود (نفس القديمة)
+        // دالة التنفيذ (Logic)
         function executeNexa() {
             const code = document.getElementById('codeEditor').value;
             const consoleBox = document.getElementById('consoleBox');
@@ -149,7 +157,7 @@ reveal vault: "Corporate_Secrets"</textarea>
                 const lines = code.split('\n');
                 lines.forEach((line) => {
                     let trim = line.trim();
-                    if (!trim || trim.startsWith("//")) return;
+                    if (!trim || trim.startswith("//")) return;
                     if (trim.includes("system")) {
                         addMem('system', 'Public', '"NEXA CORE v1.1"');
                         consoleBox.innerHTML += '<br><span class="text-slate-300">NX_Output: "NEXA CORE v1.1"</span>';
