@@ -2,34 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1200"> <title>NEXA | SOVEREIGN SHIELD</title>
+    <meta name="viewport" content="width=1200">
+    <title>NEXA | SOVEREIGN SHIELD</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500&display=swap');
-        
         body { background-color: #0f172a; font-family: 'Courier New', Courier, monospace; min-width: 1200px; color: #f1f5f9; overflow: hidden; height: 100vh; margin: 0; }
-        
-        /* شاشة القفل */
         #lockScreen { transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
         .lock-panel { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
         .blue-glow { box-shadow: 0 0 40px rgba(56, 189, 248, 0.3); }
-        
-        /* واجهة العمل */
         #mainWorkspace { display: none; opacity: 0; transition: opacity 0.8s ease; width: 100%; padding: 40px; }
         .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; }
-        
-        #codeEditor { 
-            width: 100%; height: 380px; background: transparent; color: #94a3b8; 
-            font-family: 'Fira Code', monospace; font-size: 14px; line-height: 1.6; 
-            border: none; outline: none; resize: none; padding: 20px; 
-        }
-        
+        #codeEditor { width: 100%; height: 380px; background: transparent; color: #94a3b8; font-family: 'Fira Code', monospace; font-size: 14px; line-height: 1.6; border: none; outline: none; resize: none; padding: 20px; }
         .console-text { font-family: 'Fira Code', monospace; font-size: 12px; }
         .vault-tag { background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.2); padding: 2px 8px; border-radius: 4px; font-size: 10px; }
         .reveal-data { color: #4ade80 !important; font-weight: bold; background: rgba(74, 222, 128, 0.05); }
-
-        /* أنيميشن الاهتزاز عند الخطأ */
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
         .animate-shake { animation: shake 0.3s ease-in-out; }
     </style>
@@ -40,23 +28,16 @@
         <div class="w-24 h-24 bg-blue-600 rounded-full flex items-center justify-center blue-glow">
             <i class="fas fa-shield-halved text-white text-5xl"></i>
         </div>
-
         <div>
             <h1 class="text-3xl font-black tracking-tighter uppercase italic text-white">NEXA <span class="text-blue-500 not-italic">CORE</span></h1>
             <p class="text-[11px] text-slate-500 font-bold tracking-[0.3em] uppercase mt-2">Sovereign Protection Active</p>
         </div>
-
         <div class="w-full relative">
             <i class="fas fa-key absolute left-5 top-1/2 -translate-y-1/2 text-slate-600"></i>
-            <input type="password" id="sovereignKey" placeholder="ENTER SOVEREIGN KEY" 
-                   class="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-4 pl-14 pr-6 text-sm font-bold text-white placeholder:text-slate-600 focus:border-blue-500 outline-none transition">
+            <input type="password" id="sovereignKey" placeholder="ENTER SOVEREIGN KEY" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-4 pl-14 pr-6 text-sm font-bold text-white placeholder:text-slate-600 focus:border-blue-500 outline-none transition">
         </div>
-
-        <button onclick="unleashEngine()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-black tracking-widest transition-all active:scale-95 shadow-lg shadow-blue-600/30">
-            UNLEASH ENGINE
-        </button>
-
-        <p id="lockError" class="text-red-500 text-xs font-bold hidden">ACCESS DENIED: INVALID SOVEREIGN KEY</p>
+        <button onclick="unleashEngine()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-black tracking-widest transition-all active:scale-95 shadow-lg shadow-blue-600/30">UNLEASH ENGINE</button>
+        <p id="lockError" class="text-red-500 text-xs font-bold hidden">ACCESS DENIED: INVALID KEY</p>
     </div>
 
     <div id="mainWorkspace">
@@ -69,9 +50,7 @@
                         <p class="text-[10px] text-slate-500 font-bold tracking-[0.3em] uppercase">Security Workshop v1.1</p>
                     </div>
                 </div>
-                <button id="runBtn" onclick="executeNexa()" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-3 rounded-lg font-black tracking-widest transition-all shadow-lg shadow-blue-600/20">
-                    <i class="fas fa-play mr-2"></i> EXECUTE CORE
-                </button>
+                <button id="runBtn" onclick="executeNexa()" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-3 rounded-lg font-black tracking-widest transition-all shadow-lg shadow-blue-600/20"><i class="fas fa-play mr-2"></i> EXECUTE CORE</button>
             </div>
 
             <div class="grid grid-cols-12 gap-6">
@@ -80,7 +59,7 @@
                         <span><i class="fas fa-file-code mr-2 text-blue-400"></i> MAIN_SCRIPT.NXA</span>
                         <span class="text-green-500"><i class="fas fa-circle text-[6px] mr-2"></i> SYSTEM READY</span>
                     </div>
-<textarea id="codeEditor" spellcheck="false">// --- [NEXA SOVEREIGN CLEAN SCRIPT] ---
+<textarea id="codeEditor" spellcheck="false">// Paste Hacker or Clean code here
 set system -> "NEXA CORE v1.1"
 
 open vault: "Corporate_Secrets" -> {
@@ -107,88 +86,96 @@ reveal vault: "Corporate_Secrets"</textarea>
                     </div>
                 </div>
             </div>
-            
-            <div class="mt-10 text-center text-[10px] font-bold text-slate-600 tracking-[0.2em] uppercase pt-6 border-t border-white/5">
-                NEXA SOVEREIGN TECH &copy; 2026 | SECURED BY WISSAM ALENZI
-            </div>
         </div>
     </div>
 
     <script>
-        // دالة فتح القفل بمفتاح صعب التخمين
+        // 1. Key Verification
         function unleashEngine() {
             const keyInput = document.getElementById('sovereignKey').value;
-            const lockScreen = document.getElementById('lockScreen');
-            const mainWorkspace = document.getElementById('mainWorkspace');
-            const lockError = document.getElementById('lockError');
-
-            // [المفتاح السيادي المعقد]
             const SECRET_KEY = "NX-9922-PRO-SHIELD#SOVEREIGN";
-
             if (keyInput === SECRET_KEY) {
-                lockScreen.style.opacity = "0";
-                lockScreen.style.transform = "scale(0.9)";
-                
-                setTimeout(() => {
-                    lockScreen.style.display = 'none';
-                    document.body.classList.remove('flex', 'items-center', 'justify-center');
-                    document.body.style.overflow = 'auto';
-                    mainWorkspace.style.display = 'block';
-                    setTimeout(() => mainWorkspace.style.opacity = '1', 50);
-                }, 600);
+                document.getElementById('lockScreen').style.display = 'none';
+                document.getElementById('mainWorkspace').style.display = 'block';
+                setTimeout(() => document.getElementById('mainWorkspace').style.opacity = '1', 50);
             } else {
-                lockError.classList.remove('hidden');
-                document.getElementById('sovereignKey').classList.add('animate-shake', 'border-red-500');
-                setTimeout(() => {
-                    document.getElementById('sovereignKey').classList.remove('animate-shake', 'border-red-500');
-                }, 400);
+                document.getElementById('lockError').classList.remove('hidden');
             }
         }
 
-        // دالة التنفيذ (Logic)
+        // 2. Intelligent Execution Engine
+        let vaultData = {}; 
+
         function executeNexa() {
             const code = document.getElementById('codeEditor').value;
             const consoleBox = document.getElementById('consoleBox');
             const memoryBody = document.getElementById('memoryBody');
+            
+            consoleBox.innerHTML = '<span class="text-blue-400 font-bold">[NXC]: Analyzing Sovereign Logic...</span>';
             memoryBody.innerHTML = '';
-            consoleBox.innerHTML = '<span class="text-blue-400 font-bold">[NXC]: Executing Sovereign Logic...</span>';
+            vaultData = {}; 
+            let inVault = false;
 
-            setTimeout(() => {
-                const lines = code.split('\n');
-                lines.forEach((line) => {
-                    let trim = line.trim();
-                    if (!trim || trim.startswith("//")) return;
-                    if (trim.includes("system")) {
-                        addMem('system', 'Public', '"NEXA CORE v1.1"');
-                        consoleBox.innerHTML += '<br><span class="text-slate-300">NX_Output: "NEXA CORE v1.1"</span>';
+            const lines = code.split('\n');
+            lines.forEach((line, index) => {
+                let l = line.trim();
+                if (!l || l.startsWith("//")) return;
+
+                // Detect Vault Start
+                if (l.includes("open vault")) { inVault = true; return; }
+                if (l === "}") { inVault = false; return; }
+
+                // Process "set"
+                if (l.startsWith("set")) {
+                    let match = l.match(/set\s+(\w+)\s*->\s*"?([^"]+)"?/);
+                    if (match) {
+                        let [_, key, val] = match;
+                        if (inVault) {
+                            vaultData[key] = val;
+                            addMem(key, "vault:Secure", "hash_7e8c...", true);
+                        } else {
+                            addMem(key, "Public", val, false);
+                        }
                     }
-                    if (trim.includes("open vault")) {
-                        consoleBox.innerHTML += '<br><span class="text-slate-500">[NXC]: Shielding secrets in Vault...</span>';
-                        addMem('adminKey', 'vault:Secrets', '7e8c...2a', true);
+                }
+
+                // Process "io.say" (The Guard)
+                if (l.includes("io.say")) {
+                    let match = l.match(/\(([^)]+)\)/);
+                    if (match) {
+                        let varName = match[1];
+                        if (vaultData[varName]) {
+                            consoleBox.innerHTML += `<br><span class="text-red-500 font-bold">[ERROR]: Logic violation at line ${index+1}. Respect the Vault!</span>`;
+                        } else {
+                            // Search for variable in rows or just print raw
+                            consoleBox.innerHTML += `<br>NX_Output: ${valFromMem(varName) || varName}`;
+                        }
                     }
-                    if (trim.includes("reveal vault")) {
-                        setTimeout(() => {
-                            consoleBox.innerHTML += '<br><span class="text-green-400 font-bold">// NEXA CORE: Success. Access Granted.</span>';
-                            revealAll();
-                        }, 800);
-                    }
-                });
-            }, 800);
+                }
+
+                // Process "reveal"
+                if (l.startsWith("reveal vault")) {
+                    setTimeout(() => {
+                        consoleBox.innerHTML += '<br><span class="text-green-400 font-bold">// NEXA CORE: Access Granted. Decrypting...</span>';
+                        for (let k in vaultData) {
+                            let cell = document.getElementById('v_' + k);
+                            if (cell) { cell.innerHTML = vaultData[k]; cell.className = "px-4 py-3 text-right reveal-data"; }
+                        }
+                    }, 800);
+                }
+            });
         }
 
         function addMem(name, context, val, locked) {
             const body = document.getElementById('memoryBody');
-            body.innerHTML += `
-                <tr class="hover:bg-white/5">
-                    <td class="px-4 py-3 font-bold text-slate-300">${name}</td>
-                    <td class="px-4 py-3"><span class="vault-tag">${context}</span></td>
-                    <td class="px-4 py-3 text-right font-mono text-slate-500" id="v_${name}">${locked ? '<i class="fas fa-lock text-[9px] mr-2"></i>'+val : val}</td>
-                </tr>`;
+            body.innerHTML += `<tr class="hover:bg-white/5"><td class="px-4 py-3 font-bold text-slate-300">${name}</td><td class="px-4 py-3"><span class="vault-tag">${context}</span></td><td class="px-4 py-3 text-right font-mono text-slate-500" id="v_${name}">${locked ? '<i class="fas fa-lock text-[9px] mr-2"></i>'+val : val}</td></tr>`;
         }
 
-        function revealAll() {
-            const v = document.getElementById('v_adminKey');
-            if(v) { v.innerHTML = "9922"; v.className = "px-4 py-3 text-right reveal-data"; }
+        function valFromMem(name) {
+            // Very basic look-up for the demo
+            if (name === "system") return '"NEXA CORE v1.1"';
+            if (name === "status") return '"Operational"';
+            return null;
         }
     </script>
 </body>
