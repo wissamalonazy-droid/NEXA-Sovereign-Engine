@@ -6,38 +6,47 @@ import re
 class NEXA_Sovereign_Engine:
     def __init__(self):
         self.key_file = "key.nx"
-        # --- [السطر الانتحاري] ---
-        self._ensure_key_exists() 
-        
         self.storage = {}
         self.vault = {}
         self.original_data = {}
         self.vault_mode = False
+        
+        # أهم خطوة: قفل النظام إذا ما فيه مفتاح
+        self._boot_lock()
 
-    def _ensure_key_exists(self):
-        # التحقق الصارم: إذا الملف مو موجود في المجلد، اخرج فوراً
+    def _boot_lock(self):
+        # التحقق من وجود الملف
         if not os.path.exists(self.key_file):
-            print("\n" + "!"*40)
+            print("\n" + "!"*45)
             print("[NXC]: FATAL ERROR - SOVEREIGN KEY MISSING")
-            print("[NXC]: SYSTEM LOCKED FOR SECURITY")
-            print("!"*40 + "\n")
-            sys.exit() # ينهي تشغيل البرنامج كلياً
+            print("[NXC]: SYSTEM LOCKED. PLEASE INSERT 'key.nx'")
+            print("!"*45 + "\n")
+            sys.exit() # يخرج من البرنامج فوراً
 
-        # إذا الملف موجود، تأكد من الكلام اللي داخله
+        # التحقق من النص اللي داخل الملف
         with open(self.key_file, "r") as f:
-            if f.read().strip() != "NEXA_9922_ORIGINAL":
+            content = f.read().strip()
+            if content != "NEXA_9922_ORIGINAL":
                 print("\n[NXC]: SECURITY BREACH - INVALID KEY")
+                print("[NXC]: ACCESS DENIED.")
                 sys.exit()
         
-        print("[NXC]: ACCESS GRANTED. WELCOME WISSAM.\n")
+        print("[NXC]: KEY AUTHENTICATED. SOVEREIGN MODE ACTIVE.\n")
 
     def execute(self, script):
-        # (باقي كود التنفيذ اللي أعطيتك اياه سابقاً)
         for line in script.split('\n'):
             line = line.strip()
             if not line or line.startswith("//"): continue
-            if "open vault:" in line: self.vault_mode = True; continue
-            if line == "}": self.vault_mode = False; continue
+            
+            # منطق الخزنة (Vault)
+            if "open vault:" in line:
+                self.vault_mode = True
+                continue
+            if line == "}":
+                self.vault_mode = False
+                continue
+
+            # التعيين (Set)
             if "set" in line and "->" in line:
                 parts = re.match(r'set\s+(\w+)\s*->\s*(.*)', line)
                 if parts:
@@ -46,19 +55,28 @@ class NEXA_Sovereign_Engine:
                     if self.vault_mode:
                         self.vault[name] = hashlib.sha256(val.encode()).hexdigest()[:12]
                         self.original_data[name] = val
-                    else: self.storage[name] = val
+                    else:
+                        self.storage[name] = val
+
+            # الطباعة (Say) مع حماية الخزنة
             elif "io.say" in line:
                 target_match = re.search(r'\((.*)\)', line)
                 if target_match:
                     target = target_match.group(1)
-                    if target in self.vault: print(f"[NEXA]: Logic violation at '{target}'.")
-                    else: print(f"NX_Output: {self.storage.get(target, target)}")
-            if line.startswith("reveal vault:"):
-                print(f"\n--- [REVEALING] ---")
-                for k, v in self.original_data.items(): print(f"[UNLOCKED]: {k} -> {v}")
+                    if target in self.vault:
+                        print(f"\033[91m[NEXA]: Logic violation at '{target}'. Respect the Vault!\033[0m")
+                    else:
+                        print(f"NX_Output: {self.storage.get(target, target)}")
 
-# --- تجربة القفل ---
+            # الكشف (Reveal)
+            if line.startswith("reveal vault:"):
+                print(f"\n\033[92m--- [NXC]: REVEALING SOVEREIGN DATA ---\033[0m")
+                for k, v in self.original_data.items():
+                    print(f"[UNLOCKED]: {k} -> {v}")
+
+# --- تشغيل المحرك ---
 if __name__ == "__main__":
     nexa = NEXA_Sovereign_Engine()
-    test_code = 'set x -> "Test"\nio.say(x)'
-    nexa.execute(test_code)
+    
+    # حط كودك هنا لتجربته
+    nexa.execute("// System Ready")
